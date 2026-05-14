@@ -1,0 +1,38 @@
+resource_pools:
+  - pool_id: k100_train
+    name: K100-训练池
+    description: 通用 K100 训练资源池
+    resource_type: K100
+    nodes:
+      - node01
+      - node02
+      - node03
+      - node04
+    sshuser_path: /public/bin/sshuser
+    total_devices: 32
+    default_grant_hours: 72
+    max_grant_hours: 168
+    min_free_devices_for_auto_suggest: 4
+    enabled: true
+    prometheus:
+      labels:
+        pool: k100_train
+        accelerator: k100
+
+  - pool_id: z100_infer
+    name: Z100-推理池
+    description: Z100 推理测试资源池
+    resource_type: Z100
+    nodes:
+      - node11
+      - node12
+    sshuser_path: /public/bin/sshuser
+    total_devices: 16
+    default_grant_hours: 24
+    max_grant_hours: 72
+    min_free_devices_for_auto_suggest: 2
+    enabled: true
+    prometheus:
+      labels:
+        pool: z100_infer
+        accelerator: z100

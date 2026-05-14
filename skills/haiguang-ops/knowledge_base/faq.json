@@ -1,0 +1,488 @@
+{
+  "faq": [
+    {
+      "id": "login-001",
+      "question": "无法通过 SSH 登录跳转节点",
+      "category": "login",
+      "keywords": [
+        "登录",
+        "跳转节点",
+        "ssh",
+        "公钥",
+        "连接超时"
+      ],
+      "solution": "检查公钥配置或动态码，确认 known_hosts 已更新，服务状态正常",
+      "possible_reasons": "公钥未配置、动态码错误、SSH配置问题、known_hosts 未更新",
+      "related_nodes": [
+        "乌镇跳转节点"
+      ]
+    },
+    {
+      "id": "login-002",
+      "question": "公钥登录失败，提示 Permission denied",
+      "category": "login",
+      "keywords": [
+        "登录",
+        "公钥",
+        "Permission denied",
+        "authorized_keys",
+        "权限"
+      ],
+      "solution": "检查公钥格式、authorized_keys 文件权限(.ssh目录700, authorized_keys文件600)、用户主目录权限",
+      "possible_reasons": "公钥格式错误、authorized_keys 权限不正确、.ssh 目录权限不正确",
+      "related_nodes": [
+        "乌镇跳转节点"
+      ]
+    },
+    {
+      "id": "login-003",
+      "question": "动态码获取失败或显示不正确",
+      "category": "login",
+      "keywords": [
+        "登录",
+        "动态码",
+        "动态令牌",
+        "认证",
+        "令牌"
+      ],
+      "solution": "同步动态令牌应用时间，如更换设备需联系管理员重新绑定",
+      "possible_reasons": "动态令牌应用未同步时间、设备更换未重新绑定、应用故障",
+      "related_nodes": [
+        "认证服务器"
+      ]
+    },
+    {
+      "id": "login-004",
+      "question": "SSH 连接经常断开",
+      "category": "login",
+      "keywords": [
+        "SSH",
+        "断开",
+        "连接",
+        "保活",
+        "超时"
+      ],
+      "solution": "在 SSH 客户端启用 ServerAliveInterval 配置，使用 screen/tmux 保持会话",
+      "possible_reasons": "网络不稳定、SSH 客户端未启用保活机制、防火墙超时策略",
+      "related_nodes": [
+        "跳转节点",
+        "集群节点"
+      ]
+    },
+    {
+      "id": "container-001",
+      "question": "Docker 容器无法启动，提示网络代理错误",
+      "category": "container",
+      "keywords": [
+        "Docker",
+        "容器",
+        "代理",
+        "proxy",
+        "启动失败"
+      ],
+      "solution": "检查 Docker daemon 代理配置，重启 Docker 服务使配置生效",
+      "possible_reasons": "系统配置了 HTTP 代理、容器未继承代理设置、代理地址配置错误",
+      "related_nodes": [
+        "Docker 主机"
+      ]
+    },
+    {
+      "id": "container-002",
+      "question": "容器内无法解析 DNS",
+      "category": "container",
+      "keywords": [
+        "容器",
+        "DNS",
+        "解析",
+        "域名",
+        "docker"
+      ],
+      "solution": "检查 Docker DNS 配置，启动时指定 --dns 参数，尝试 --network=host 模式",
+      "possible_reasons": "Docker DNS 配置错误、宿主机防火墙阻断 DNS 请求、容器网络模式不当",
+      "related_nodes": [
+        "Docker 主机"
+      ]
+    },
+    {
+      "id": "container-003",
+      "question": "容器存储卷挂载失败",
+      "category": "container",
+      "keywords": [
+        "容器",
+        "存储卷",
+        "挂载",
+        "volume",
+        "权限"
+      ],
+      "solution": "确认挂载路径存在且正确，修正目录权限，如使用 SELinux 需添加 :z 或 :rz 标签",
+      "possible_reasons": "挂载路径不存在、SELinux 策略阻止、挂载路径权限不足",
+      "related_nodes": [
+        "Docker 主机"
+      ]
+    },
+    {
+      "id": "container-004",
+      "question": "容器镜像拉取失败",
+      "category": "container",
+      "keywords": [
+        "Docker",
+        "镜像",
+        "拉取",
+        "pull",
+        "仓库",
+        "404"
+      ],
+      "solution": "确认镜像名称正确，检查私有仓库登录状态，配置镜像加速器",
+      "possible_reasons": "镜像名称拼写错误、私有仓库认证失败、网络超时",
+      "related_nodes": [
+        "镜像仓库"
+      ]
+    },
+    {
+      "id": "container-005",
+      "question": "容器内运行 CUDA 程序报错 CUDA not found",
+      "category": "container",
+      "keywords": [
+        "容器",
+        "CUDA",
+        "GPU",
+        "nvidia",
+        "runtime"
+      ],
+      "solution": "使用 nvidia 运行时启动容器（--runtime=nvidia），确认镜像内 CUDA 库路径正确",
+      "possible_reasons": "未使用 NVIDIA Docker 运行时、容器未继承 GPU 设备、CUDA 库未打包进镜像",
+      "related_nodes": [
+        "Docker 主机",
+        "GPU 计算节点"
+      ]
+    },
+    {
+      "id": "network-001",
+      "question": "VPN 连接成功但无法访问内网资源",
+      "category": "network",
+      "keywords": [
+        "VPN",
+        "内网",
+        "访问",
+        "路由",
+        "连接"
+      ],
+      "solution": "检查 VPN 路由配置，添加内网路由表，确认内网 DNS 配置正确",
+      "possible_reasons": "VPN 路由配置不完整、本地防火墙阻止流量、DNS 配置未切换",
+      "related_nodes": [
+        "VPN 网关",
+        "集群网络"
+      ]
+    },
+    {
+      "id": "network-002",
+      "question": "SSH 连接空闲后自动断开",
+      "category": "network",
+      "keywords": [
+        "SSH",
+        "断开",
+        "空闲",
+        "超时",
+        "保活"
+      ],
+      "solution": "在 SSH 客户端配置 ServerAliveInterval，使用 screen/tmux 保持会话",
+      "possible_reasons": "服务端 ClientAliveInterval 配置、网络设备超时策略、防火墙连接超时",
+      "related_nodes": [
+        "跳转节点",
+        "集群节点"
+      ]
+    },
+    {
+      "id": "network-003",
+      "question": "内网 IP 地址冲突",
+      "category": "network",
+      "keywords": [
+        "IP",
+        "冲突",
+        "内网",
+        "地址",
+        "网络"
+      ],
+      "solution": "使用 arp 或 ip neigh 定位冲突设备 MAC，确认为静态 IP 分配冲突，调整 IP 配置",
+      "possible_reasons": "DHCP 范围与静态 IP 重叠、设备手动配置了冲突 IP、网络配置错误",
+      "related_nodes": [
+        "集群网络"
+      ]
+    },
+    {
+      "id": "network-004",
+      "question": "特定端口无法访问",
+      "category": "network",
+      "keywords": [
+        "端口",
+        "访问",
+        "防火墙",
+        "安全组",
+        "监听"
+      ],
+      "solution": "检查服务监听地址(0.0.0.0)，开放防火墙端口，检查云安全组规则",
+      "possible_reasons": "服务仅监听 localhost、防火墙规则阻止、云安全组未开放端口",
+      "related_nodes": [
+        "集群节点",
+        "云平台"
+      ]
+    },
+    {
+      "id": "storage-001",
+      "question": "NFS 挂载失败",
+      "category": "storage",
+      "keywords": [
+        "NFS",
+        "挂载",
+        "存储",
+        "mount",
+        "连接"
+      ],
+      "solution": "确认 NFS 服务启动，检查网络连通性，安装 nfs-utils，使用 showmount 检查导出",
+      "possible_reasons": "NFS 服务未启动、网络不通、导出配置错误、缺少 nfs-utils",
+      "related_nodes": [
+        "NFS 存储服务器"
+      ]
+    },
+    {
+      "id": "storage-002",
+      "question": "磁盘空间不足",
+      "category": "storage",
+      "keywords": [
+        "磁盘",
+        "空间",
+        "不足",
+        "清理",
+        "容量"
+      ],
+      "solution": "使用 df -h 检查使用情况，清理不需要的文件和日志，扩展磁盘空间或迁移数据",
+      "possible_reasons": "分区已满、inode 耗尽、大文件未清理、日志文件膨胀",
+      "related_nodes": [
+        "计算节点",
+        "存储节点"
+      ]
+    },
+    {
+      "id": "storage-003",
+      "question": "挂载的 NFS 存储权限不足",
+      "category": "storage",
+      "keywords": [
+        "NFS",
+        "权限",
+        "挂载",
+        "写入",
+        "只读"
+      ],
+      "solution": "检查挂载选项(是否为ro)，确认服务端导出配置包含 rw，重新挂载指定权限",
+      "possible_reasons": "服务端导出配置缺少 rw、UID/GID 不匹配、挂载选项指定了 ro",
+      "related_nodes": [
+        "NFS 存储服务器"
+      ]
+    },
+    {
+      "id": "storage-004",
+      "question": "文件权限导致无法访问",
+      "category": "storage",
+      "keywords": [
+        "权限",
+        "ACL",
+        "访问",
+        "SELinux",
+        "文件"
+      ],
+      "solution": "检查文件 ACL 和 SELinux 上下文，临时关闭 SELinux 测试，修复 ACL 权限",
+      "possible_reasons": "NFS ACL 限制、文件系统权限问题、SELinux/AppArmor 限制",
+      "related_nodes": [
+        "计算节点",
+        "存储节点"
+      ]
+    },
+    {
+      "id": "storage-005",
+      "question": "存储 I/O 延迟高",
+      "category": "storage",
+      "keywords": [
+        "存储",
+        "I/O",
+        "延迟",
+        "性能",
+        "读写"
+      ],
+      "solution": "测试网络延迟，使用 iostat 和 dd 测试 I/O 性能，联系存储管理员检查状态",
+      "possible_reasons": "NFS 网络延迟高、存储服务器负载高、磁盘硬件问题",
+      "related_nodes": [
+        "存储节点",
+        "NFS 服务器"
+      ]
+    },
+    {
+      "id": "gpu-001",
+      "question": "nvidia-smi 显示 No devices were found",
+      "category": "gpu",
+      "keywords": [
+        "GPU",
+        "nvidia-smi",
+        "驱动",
+        "找不到设备"
+      ],
+      "solution": "检查驱动安装状态 lsmod | grep nvidia，重新安装驱动，检查 GPU 硬件识别",
+      "possible_reasons": "NVIDIA 驱动未正确安装、GPU 硬件未识别、驱动与 CUDA 版本不匹配",
+      "related_nodes": [
+        "GPU 计算节点"
+      ]
+    },
+    {
+      "id": "gpu-002",
+      "question": "GPU 频率过低或自动降频",
+      "category": "gpu",
+      "keywords": [
+        "GPU",
+        "频率",
+        "降频",
+        "温度",
+        "性能"
+      ],
+      "solution": "检查 GPU 温度，清理散热器，检查电源供应，禁用驱动降频选项",
+      "possible_reasons": "GPU 温度过高触发保护、电源功率不足、驱动功耗管理配置",
+      "related_nodes": [
+        "GPU 计算节点"
+      ]
+    },
+    {
+      "id": "gpu-003",
+      "question": "CUDA 版本不兼容",
+      "category": "gpu",
+      "keywords": [
+        "CUDA",
+        "版本",
+        "兼容",
+        "驱动",
+        "nvcc"
+      ],
+      "solution": "检查驱动支持的 CUDA 版本，设置正确的 CUDA 库路径，使用 update-alternatives 选择版本",
+      "possible_reasons": "驱动版本不支持 CUDA 版本、库路径配置错误、多 CUDA 版本冲突",
+      "related_nodes": [
+        "GPU 计算节点"
+      ]
+    },
+    {
+      "id": "gpu-004",
+      "question": "NVIDIA 驱动安装失败",
+      "category": "gpu",
+      "keywords": [
+        "驱动",
+        "安装",
+        "NVIDIA",
+        "失败",
+        "内核"
+      ],
+      "solution": "安装内核开发包，禁用 Nouveau 驱动，关闭 Secure Boot 或对驱动签名",
+      "possible_reasons": "内核版本不匹配、缺少内核开发头文件、Secure Boot 签名阻止",
+      "related_nodes": [
+        "GPU 计算节点"
+      ]
+    },
+    {
+      "id": "gpu-005",
+      "question": "多块 GPU 但只识别部分",
+      "category": "gpu",
+      "keywords": [
+        "GPU",
+        "多块",
+        "识别",
+        "PCIe",
+        "nvidia-smi"
+      ],
+      "solution": "检查所有 GPU 状态 lspci，重新安装驱动，检查 PCIe 插槽，查看 dmesg 日志",
+      "possible_reasons": "GPU 物理位置问题、PCIe 插槽接触不良、驱动或硬件问题",
+      "related_nodes": [
+        "GPU 计算节点"
+      ]
+    },
+    {
+      "id": "env-001",
+      "question": "PATH 环境变量未包含 CUDA 路径",
+      "category": "env",
+      "keywords": [
+        "PATH",
+        "CUDA",
+        "nvcc",
+        "环境变量",
+        "路径"
+      ],
+      "solution": "在 ~/.bashrc 中添加 export PATH=/usr/local/cuda/bin:$PATH，然后 source ~/.bashrc",
+      "possible_reasons": "CUDA 安装路径非标准、.bashrc 未配置 PATH、多 CUDA 版本 PATH 指向错误",
+      "related_nodes": [
+        "GPU 计算节点"
+      ]
+    },
+    {
+      "id": "env-002",
+      "question": "LD_LIBRARY_PATH 未包含 CUDA 库",
+      "category": "env",
+      "keywords": [
+        "LD_LIBRARY_PATH",
+        "CUDA",
+        "库",
+        "libcuda",
+        "环境变量"
+      ],
+      "solution": "配置 LD_LIBRARY_PATH，更新 ldconfig 缓存确认库文件存在",
+      "possible_reasons": "CUDA 库路径未配置、库文件权限问题、ldconfig 缓存未更新",
+      "related_nodes": [
+        "GPU 计算节点"
+      ]
+    },
+    {
+      "id": "env-003",
+      "question": "conda 环境变量配置问题",
+      "category": "env",
+      "keywords": [
+        "conda",
+        "环境变量",
+        "PATH",
+        "环境",
+        "冲突"
+      ],
+      "solution": "修改 conda 环境配置保留原有路径，使用 conda run 执行命令，使用绝对路径",
+      "possible_reasons": "conda 环境激活脚本修改 PATH、环境切换导致路径丢失、与系统环境冲突",
+      "related_nodes": [
+        "Python 环境"
+      ]
+    },
+    {
+      "id": "env-004",
+      "question": "环境变量生效后重启失效",
+      "category": "env",
+      "keywords": [
+        "环境变量",
+        "重启",
+        "失效",
+        "配置",
+        ".bashrc"
+      ],
+      "solution": "将环境变量写入 ~/.bashrc 或 /etc/profile.d/custom.sh 系统级配置",
+      "possible_reasons": "仅在当前 shell 会话设置、未写入配置文件、系统更新覆盖配置",
+      "related_nodes": [
+        "所有节点"
+      ]
+    },
+    {
+      "id": "env-005",
+      "question": "容器内环境变量未传递",
+      "category": "env",
+      "keywords": [
+        "容器",
+        "环境变量",
+        "传递",
+        "docker",
+        "env"
+      ],
+      "solution": "使用 -e 参数传递环境变量或 --env-file 指定文件，检查容器内环境变量",
+      "possible_reasons": "容器未使用 --env 传递变量、基础镜像覆盖环境变量、Docker daemon 配置问题",
+      "related_nodes": [
+        "Docker 主机"
+      ]
+    }
+  ]
+}
