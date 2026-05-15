@@ -1,4 +1,4 @@
-"""知识库搜索工具"""
+"""知识库搜索工具（纯关键词兜底方案）"""
 import json
 from pathlib import Path
 from typing import List, Dict
@@ -9,24 +9,13 @@ try:
 except ImportError:
     JIEBA_AVAILABLE = False
 
-# 中文停用词表
-STOPWORDS = {
-    "的", "是", "在", "和", "了", "我", "你", "他", "她", "它",
-    "这", "那", "有", "个", "们", "来", "去", "到", "为", "和",
-    "与", "或", "但", "却", "也", "就", "都", "而", "及", "着",
-    "一个", "什么", "怎么", "如何", "为什么", "能否", "可以"
-}
-
-# 运维领域同义词映射
-SYNONYM_MAP = {
-    "登录": ["登陆", "登入", "ssh登录", "ssh登陆"],
-    "容器": ["docker", "Docker", "容器化"],
-    "GPU": ["gpu", "显卡", "图形处理器", "nvidia"],
-    "网络": ["网", "网卡", "网络连接"],
-    "存储": ["磁盘", "硬盘", "存储卷", "nfs"],
-    "节点": ["机器", "服务器", "主机"],
-    "驱动": ["驱动", "显卡驱动", "nvidia驱动"],
-}
+# 复用 vector_search 里的统一定义
+try:
+    from vector_search import STOPWORDS, expand_synonyms
+except ImportError:
+    STOPWORDS = set()
+    def expand_synonyms(words):
+        return set(words)
 
 
 class KnowledgeSearch:
@@ -75,16 +64,8 @@ class KnowledgeSearch:
         return result
 
     def _expand_synonyms(self, words: List[str]) -> List[str]:
-        """同义词展开"""
-        expanded = set(words)
-        for word in words:
-            if word in SYNONYM_MAP:
-                expanded.update(SYNONYM_MAP[word])
-            # 反向：如果词是某个词的同义词，也添加
-            for key, synonyms in SYNONYM_MAP.items():
-                if word in synonyms:
-                    expanded.add(key)
-        return list(expanded)
+        """同义词展开（委托给统一的 expand_synonyms）"""
+        return list(expand_synonyms(words))
 
     def search_by_keywords(self, keywords: List[str], limit: int = 5) -> List[Dict]:
         """根据关键词搜索 FAQ（支持中文分词和同义词）"""

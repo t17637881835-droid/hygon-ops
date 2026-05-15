@@ -1,0 +1,214 @@
+{
+  "summary": {
+    "total": 20,
+    "category_hits": 10,
+    "category_hit_rate": 0.5,
+    "score_stats": {
+      "min": 0.06,
+      "max": 0.22666666666666668,
+      "avg": 0.1208138528138528
+    }
+  },
+  "results": [
+    {
+      "query": "登录不上节点怎么办",
+      "expected_category": "login",
+      "top_id": "",
+      "top_category": "",
+      "category_match": false,
+      "combined_score": 0.0,
+      "vector_score": 0.0,
+      "keyword_score": 0.0
+    },
+    {
+      "query": "ssh 连不上跳转机",
+      "expected_category": "login",
+      "top_id": "login-001",
+      "top_category": "login",
+      "category_match": true,
+      "combined_score": 0.06857142857142857,
+      "vector_score": 0.0,
+      "keyword_score": 0.17142857142857143
+    },
+    {
+      "query": "公钥登录失败 Permission denied",
+      "expected_category": "login",
+      "top_id": "login-002",
+      "top_category": "login",
+      "category_match": true,
+      "combined_score": 0.13333333333333333,
+      "vector_score": 0.0,
+      "keyword_score": 0.3333333333333333
+    },
+    {
+      "query": "怎么重置 SSH 密钥",
+      "expected_category": "login",
+      "top_id": "login-004",
+      "top_category": "login",
+      "category_match": true,
+      "combined_score": 0.13333333333333333,
+      "vector_score": 0.0,
+      "keyword_score": 0.3333333333333333
+    },
+    {
+      "query": "docker 容器起不来",
+      "expected_category": "container",
+      "top_id": "container-001",
+      "top_category": "container",
+      "category_match": true,
+      "combined_score": 0.128,
+      "vector_score": 0.0,
+      "keyword_score": 0.32
+    },
+    {
+      "query": "容器内网络不通",
+      "expected_category": "container",
+      "top_id": "",
+      "top_category": "",
+      "category_match": false,
+      "combined_score": 0.0,
+      "vector_score": 0.0,
+      "keyword_score": 0.0
+    },
+    {
+      "query": "docker build 报错",
+      "expected_category": "container",
+      "top_id": "container-001",
+      "top_category": "container",
+      "category_match": true,
+      "combined_score": 0.10666666666666667,
+      "vector_score": 0.0,
+      "keyword_score": 0.26666666666666666
+    },
+    {
+      "query": "怎么清理 docker 镜像缓存",
+      "expected_category": "container",
+      "top_id": "container-001",
+      "top_category": "container",
+      "category_match": true,
+      "combined_score": 0.10666666666666667,
+      "vector_score": 0.0,
+      "keyword_score": 0.26666666666666666
+    },
+    {
+      "query": "nvidia-smi 显示 No devices were found",
+      "expected_category": "gpu",
+      "top_id": "faqmd-gpu-01",
+      "top_category": "gpu",
+      "category_match": true,
+      "combined_score": 0.22666666666666668,
+      "vector_score": 0.0,
+      "keyword_score": 0.5666666666666667
+    },
+    {
+      "query": "GPU 利用率低怎么排查",
+      "expected_category": "gpu",
+      "top_id": "container-005",
+      "top_category": "container",
+      "category_match": false,
+      "combined_score": 0.06,
+      "vector_score": 0.0,
+      "keyword_score": 0.15
+    },
+    {
+      "query": "驱动版本不匹配",
+      "expected_category": "gpu",
+      "top_id": "",
+      "top_category": "",
+      "category_match": false,
+      "combined_score": 0.0,
+      "vector_score": 0.0,
+      "keyword_score": 0.0
+    },
+    {
+      "query": "ping 不通外网",
+      "expected_category": "network",
+      "top_id": "",
+      "top_category": "",
+      "category_match": false,
+      "combined_score": 0.0,
+      "vector_score": 0.0,
+      "keyword_score": 0.0
+    },
+    {
+      "query": "NCCL 通信超时",
+      "expected_category": "network",
+      "top_id": "",
+      "top_category": "",
+      "category_match": false,
+      "combined_score": 0.0,
+      "vector_score": 0.0,
+      "keyword_score": 0.0
+    },
+    {
+      "query": "网卡配置文件在哪",
+      "expected_category": "network",
+      "top_id": "",
+      "top_category": "",
+      "category_match": false,
+      "combined_score": 0.0,
+      "vector_score": 0.0,
+      "keyword_score": 0.0
+    },
+    {
+      "query": "磁盘空间满了",
+      "expected_category": "storage",
+      "top_id": "",
+      "top_category": "",
+      "category_match": false,
+      "combined_score": 0.0,
+      "vector_score": 0.0,
+      "keyword_score": 0.0
+    },
+    {
+      "query": "NFS 挂载失败",
+      "expected_category": "storage",
+      "top_id": "storage-001",
+      "top_category": "storage",
+      "category_match": true,
+      "combined_score": 0.11428571428571428,
+      "vector_score": 0.0,
+      "keyword_score": 0.2857142857142857
+    },
+    {
+      "query": "怎么查看磁盘 IO",
+      "expected_category": "storage",
+      "top_id": "",
+      "top_category": "",
+      "category_match": false,
+      "combined_score": 0.0,
+      "vector_score": 0.0,
+      "keyword_score": 0.0
+    },
+    {
+      "query": "conda activate 报错",
+      "expected_category": "env",
+      "top_id": "env-003",
+      "top_category": "env",
+      "category_match": true,
+      "combined_score": 0.12571428571428572,
+      "vector_score": 0.0,
+      "keyword_score": 0.3142857142857143
+    },
+    {
+      "query": "module load 找不到模块",
+      "expected_category": "env",
+      "top_id": "env-003",
+      "top_category": "env",
+      "category_match": true,
+      "combined_score": 0.12571428571428572,
+      "vector_score": 0.0,
+      "keyword_score": 0.3142857142857143
+    },
+    {
+      "query": "环境变量怎么设置永久生效",
+      "expected_category": "env",
+      "top_id": "",
+      "top_category": "",
+      "category_match": false,
+      "combined_score": 0.0,
+      "vector_score": 0.0,
+      "keyword_score": 0.0
+    }
+  ]
+}

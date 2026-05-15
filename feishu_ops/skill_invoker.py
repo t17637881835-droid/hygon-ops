@@ -12,6 +12,8 @@ except ImportError:
 
 from config import get_config
 from knowledge_search import KnowledgeSearchService
+from intent_classifier import IntentClassifier, IntentType
+from query_rewriter import QueryRewriter
 
 # 重试配置
 MAX_RETRIES = 3
@@ -91,6 +93,12 @@ class SkillInvoker:
         # 熔断器
         self.circuit_breaker = CircuitBreaker()
 
+        # 意图分类器
+        self.intent_classifier = IntentClassifier()
+
+        # 查询改写器
+        self.query_rewriter = QueryRewriter()
+
     def _init_anthropic_client(self):
         if Anthropic is None:
             return
@@ -107,8 +115,22 @@ class SkillInvoker:
                 "error": "服务暂时不可用（熔断器开启），请稍后重试"
             }
 
+        # 0. 意图分类：非问答类直接返回
+        intent_result = self.intent_classifier.classify(question)
+        if intent_result["intent"] != IntentType.QUESTION:
+            return {
+                "success": True,
+                "response": self._get_non_question_response(intent_result["intent"]),
+                "intent": intent_result["intent"].value,
+                "intent_reason": intent_result["reason"],
+            }
+
+        # 0.5 查询改写：口语化表达转规范问题
+        rewrite_result = self.query_rewriter.rewrite_with_explanation(question)
+        query_to_search = rewrite_result["rewritten"]
+
         # 1. 先从知识库检索相关内容
-        kb_results = self.knowledge_search.search(question, limit=3)
+        kb_results = self.knowledge_search.search(query_to_search, limit=3)
         top = kb_results[0] if kb_results else {}
         top_score = float(top.get("score", 0.0) or 0.0)
         top_id = top.get("id", "") if kb_results else ""
@@ -122,13 +144,14 @@ class SkillInvoker:
                 "top_id": top_id,
             }
 
-        # 1.5 高置信度快路：FAQ 打分足够高时直接返回 solution，不调 LLM
+        # 1.5 高置信度快路：FAQ 打分足够高时格式化输出，不调 LLM
         if top_score >= self.config.skill.high_confidence_score:
             solution = top.get("solution", "").strip()
             if solution:
+                response = self._format_kb_response(question, top)
                 return {
                     "success": True,
-                    "response": solution,
+                    "response": response,
                     "from_kb": True,
                     "score": top_score,
                     "top_id": top_id,
@@ -187,6 +210,26 @@ class SkillInvoker:
             return False
         top_score = float(kb_results[0].get("score", 0.0) or 0.0)
         return top_score >= self.config.skill.min_confidence_score
+
+    def _format_kb_response(self, question: str, faq_item: Dict) -> str:
+        """高置信度 FAQ 格式化输出（激活 ResponseGenerator 模板逻辑）"""
+        solution = faq_item.get("solution", "").strip()
+        category = faq_item.get("category", "")
+        faq_question = faq_item.get("question", "")
+        lines = []
+        lines.append(f"关于「{faq_question}」：\n")
+        lines.append(solution)
+        lines.append("\n如果仍未解决，请联系运维人员。")
+        return "\n".join(lines)
+
+    def _get_non_question_response(self, intent: IntentType) -> str:
+        """非问答类意图的固定回复"""
+        if intent == IntentType.CHAT:
+            return "您好，我是运维助手，专注于海光 DCU 运维问题解答。如有运维相关问题，请随时提问。"
+        elif intent == IntentType.COMMAND:
+            return "收到您的请求，请联系运维人员处理（当前仅支持知识库问答，暂不支持直接执行操作）。"
+        else:
+            return "抱歉，我无法理解您的请求，请重新描述您的运维问题。"
 
     def _build_prompt(self, question: str, kb_context: str, context: Optional[Dict]) -> str:
         return f"""你是一个海光 DCU 运维助手。请根据知识库回答用户的运维问题。

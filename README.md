@@ -7,8 +7,12 @@
 - 接收飞书消息事件
 - 识别人工回复并取消待处理消息
 - SQLite 持久化待回复队列
-- 本地知识库检索
-- 低置信度兜底回复
+- **意图分类**：区分问答/闲聊/操作指令，非问答类返回固定回复
+- **查询改写**：口语化表达转规范问题（如"登不上去" → "登录失败"）
+- 本地知识库检索（BM25 + 向量混合搜索）
+- 分数归一化（0~1 范围）
+- 同义词双向展开
+- 置信度路由：高置信度直接返回 FAQ，中置信度 LLM 润色，低置信度兜底
 - 飞书 Bot API 按 `chat_id` 回复原会话
 - Webhook 降级发送
 - 发送失败重试
@@ -25,7 +29,20 @@
 
 ```text
 feishu_ops/                 # 服务代码
+├── main.py                 # FastAPI 主入口
+├── skill_invoker.py        # 意图分类 + query 改写 + 知识检索 + LLM 调用
+├── intent_classifier.py    # 意图分类（问答/闲聊/操作指令）
+├── query_rewriter.py       # query 改写（口语化转规范）
+├── knowledge_search.py     # 知识检索统一入口
+├── knowledge_retriever.py  # 检索后端抽象（Local/RAGFlow）
 skills/haiguang-ops/        # skill 与知识库
+├── tools/
+│   ├── vector_search.py    # 向量 + BM25 混合搜索
+│   ├── search_knowledge.py # 纯关键词兜底
+│   └── generate_response.py # 回复模板
+├── scripts/
+│   └── evaluate.py         # 离线评测脚本
+└── knowledge_base/         # 知识库数据
 docker/                     # Docker 部署文件
 tests/                      # 回归测试
 .env.example                # 环境变量模板
@@ -55,6 +72,8 @@ MESSAGE_QUEUE_DB_PATH=/app/data/message_queue.db
 RESOURCE_REQUEST_DB_PATH=/app/data/resource_requests.db
 AUDIT_LOG_PATH=/app/logs/audit.jsonl
 KNOWLEDGE_BASE_PATH=/app/skills/haiguang-ops/knowledge_base
+MIN_CONFIDENCE_SCORE=0.05
+HIGH_CONFIDENCE_SCORE=0.20
 ```
 
 资源申请 MVP 可选配置：
@@ -257,6 +276,47 @@ skills/haiguang-ops/knowledge_base/faq.json
   "solution": "..."
 }
 ```
+
+## 智能问答增强
+
+### 意图分类
+
+系统会自动识别用户意图，分为三类：
+- **问答类**：运维问题，走知识库检索
+- **闲聊类**：如"你好"、"谢谢"，返回固定问候语
+- **操作指令类**：如"帮我重启容器"，提示联系运维人员
+
+### 查询改写
+
+系统会将口语化表达自动改写为规范问题，提高检索准确率：
+- "登不上去" → "登录失败"
+- "容器起不来" → "容器启动失败"
+- "网不通" → "网络连接失败"
+
+### 混合检索
+
+知识库采用 BM25 + 向量混合搜索：
+- 向量搜索权重：60%
+- BM25 关键词搜索权重：40%
+- 同义词双向展开
+- 分数归一化到 0~1 范围
+
+### 置信度路由
+
+根据检索分数自动选择回复策略：
+- **高置信度（≥0.20）**：直接返回格式化 FAQ，不调 LLM
+- **中置信度（0.05~0.20）**：调用 LLM 润色知识库内容
+- **低置信度（<<0.05）**：返回兜底话术
+
+### 离线评测
+
+提供评测脚本验证检索质量：
+
+```bash
+python3 skills/haiguang-ops/scripts/evaluate.py
+```
+
+输出命中率、分数分布、错误案例。
 
 ## 部署
 
